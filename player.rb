@@ -28,6 +28,14 @@ class Player
 	def score
 		@name.length + @health
 	end
+
+	def strong?
+		if @health > 100
+			true
+		else
+			false
+		end
+	end
 end
 
 if __FILE__ == $0
