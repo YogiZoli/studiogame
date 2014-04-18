@@ -30,11 +30,7 @@ class Player
 	end
 
 	def strong?
-		if @health > 100
-			true
-		else
-			false
-		end
+		@health > 100
 	end
 end
 
