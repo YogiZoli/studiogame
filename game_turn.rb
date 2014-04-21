@@ -3,7 +3,6 @@ require_relative 'die'
 
 module GameTurn
 
-
 	def self.take_turn(player)
 		die = Die.new
 	    case die.roll
@@ -16,4 +15,9 @@ module GameTurn
 	    end
 	end
 
+end
+
+if __FILE__ == $0
+  player = Player.new("booyaa", 111)
+  GameTurn.take_turn(player)
 end
