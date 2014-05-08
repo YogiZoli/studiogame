@@ -1,5 +1,4 @@
 require_relative 'game'
-require_relative 'die'
 
 describe Game do 
 
