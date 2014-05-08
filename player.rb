@@ -32,4 +32,8 @@ class Player
 	def strong?
 		@health > 100
 	end
+
+	def <=>(other)
+		other.score <=> score
+	end
 end
