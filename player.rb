@@ -1,10 +1,16 @@
+require_relative 'treasure_trove'
+require_relative 'playable'
+
 class Player
-	attr_accessor :name
+  include Playable
+
+  attr_accessor :name
 	attr_reader :health
 
 	def initialize(name, health=100)
 		@name = name.capitalize
 		@health = health
+		@found_treasures = Hash.new(0)
 	end
 
 	def name=(new_name)
@@ -12,28 +18,37 @@ class Player
 	end
 
 	def to_s
-		"I\'m #{@name} with a health of #{@health} and a score of #{score}"
-	end
-
-	def blam
-		@health -= 10
-		puts "#{@name} got blammed!"
-	end
-
-	def w00t
-		@health += 15
-		puts "#{@name} got w00ted!"
+		#{}"I\'m #{@name} with a health of #{@health} and a score of #{score}."
+		"I'm #{@name} with health = #{@health}, points = #{points}, and score = #{score}."
 	end
 
 	def score
-		@name.length + @health
-	end
-
-	def strong?
-		@health > 100
+		@health + points
 	end
 
 	def <=>(other)
 		other.score <=> score
 	end
+
+	def found_treasure(treasure)
+			@found_treasures[treasure.name.to_sym] += treasure.points
+			puts "#{name} found a #{treasure.name} worth #{treasure.points} points."
+			puts "#{name}'s treasures: #{@found_treasures}"
+	end
+
+	def points
+		@found_treasures.values.reduce(0, :+)
+	end
+
+	def each_found_treasure
+		@found_treasures.each do |name, points|
+			yield Treasure.new(name, points)
+		end
+	end
+
+	def self.from_csv(string)
+	  name, health = string.split(',')
+	  Player.new(name, Integer(health))
+	end
+
 end

@@ -54,5 +54,9 @@ describe TreasureTrove do
     # or use alternate expectation syntax:
     # expect(TreasureTrove::TREASURES).to include(treasure)
   end
+  
+  it "returns a funnz string" do
+    puts "booyyaaakashaa"  
+  end
 
 end

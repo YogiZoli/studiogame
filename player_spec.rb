@@ -1,4 +1,5 @@
 require_relative 'player'
+require_relative 'treasure_trove'
 
 describe Player do
   	
@@ -8,6 +9,8 @@ describe Player do
   		@player = Player.new("larry", @initial_health)
   	end
 
+  	it { expect(@player.name).to eq "Larry" }
+
     it "has a capitalized name" do
     	@player.name.should == "Larry"
     end
@@ -16,12 +19,16 @@ describe Player do
 		@player.health.should == @initial_health
  	end
 
-	it "has a string representation" do
-		@player.to_s.should == "I'm Larry with a health of 150 and a score of 155"
+	it "has a string representation" do  
+	  @player.found_treasure(Treasure.new(:hammer, 50))
+	  @player.found_treasure(Treasure.new(:hammer, 50))
+
+	  #@player.to_s.should == "I'm Larry with a health of 150 and a score of 250."
+	  @player.to_s.should == "I'm Larry with health = 150, points = 100, and score = 250."
 	end
 
-	it "computes a score as the sum of its health and length of name" do
-		@player.score.should == @player.name.length + @player.health
+	it "computes a score as the sum of its health and points" do
+		@player.score.should == @player.health + @player.points
 	end
 
 	it "increases health by 15 when w00ted" do
@@ -67,5 +74,41 @@ describe Player do
 	    @players.sort.should == [@player3, @player2, @player1]
 	  end
     end
+
+	it "computes a score as the sum of its health and points" do
+	  @player.found_treasure(Treasure.new(:hammer, 50))
+	  @player.found_treasure(Treasure.new(:hammer, 50))
+	  
+	  @player.score.should == 250
+	end
+
+	it "yields each found treasure and its total points" do
+	  @player.found_treasure(Treasure.new(:skillet, 100))
+	  @player.found_treasure(Treasure.new(:skillet, 100))
+	  @player.found_treasure(Treasure.new(:hammer, 50))
+	  @player.found_treasure(Treasure.new(:bottle, 5))
+	  @player.found_treasure(Treasure.new(:bottle, 5))
+	  @player.found_treasure(Treasure.new(:bottle, 5))
+	  @player.found_treasure(Treasure.new(:bottle, 5))
+	  @player.found_treasure(Treasure.new(:bottle, 5))
+	  
+	  yielded = []
+	  @player.each_found_treasure do |treasure|
+	    yielded << treasure
+	  end
+	  
+	  yielded.should == [
+	    Treasure.new(:skillet, 200), 
+	    Treasure.new(:hammer, 50), 
+	    Treasure.new(:bottle, 25)
+	 ]
+	end
+
+	it "can be created from a CSV string" do  
+  		player = Player.from_csv("larry,150")
+
+		player.name.should == "Larry"
+  		player.health.should == 150
+	end
 
 end
